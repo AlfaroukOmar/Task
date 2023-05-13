@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav.xml"
+    app:startDestination="@id/postsListFragment">
+
+    <fragment
+        android:id="@+id/postsListFragment"
+        android:name="com.alfarouk.task.presentation.ui.postlist.view.PostsListFragment"
+        android:label="PostsListFragment">
+        <action
+            android:id="@+id/action_postsListFragment_to_postDetailsFragment"
+            app:destination="@id/postDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailsFragment"
+        android:name="com.alfarouk.task.presentation.ui.postdetails.view.PostDetailsFragment"
+        android:label="PostDetailsFragment" />
+</navigation>

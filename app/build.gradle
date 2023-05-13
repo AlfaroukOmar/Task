@@ -1,0 +1,124 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'com.alfarouk.task'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.alfarouk.task"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE-notice.md'
+        exclude 'mockito-extensions/org.mockito.plugins.MockMaker'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+
+    implementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    implementation 'androidx.navigation:navigation-testing:2.5.3'
+    def coroutinesVersion = '1.5.2'
+    def retrofitVersion = "2.9.0"
+    def lifeCycleVersion = '2.4.1'
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+
+    // This adds the Glide library to the project, which is used to load and display images from various sources.
+    // The annotationProcessor dependency is optional but can help generate code that makes working with Glide more efficient.
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+
+
+    // Coroutines: Asynchronous programming library used to simplify code that executes asynchronously.
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    // Retrofit: HTTP client library used for making network requests and parsing responses.
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+
+    // ViewModel: Part of the Android Architecture Components used for managing UI-related data in a lifecycle-conscious way.
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycleVersion"
+
+    // Hilt for Dependency Injection: A library used for dependency injection in Android applications.
+    implementation 'com.google.dagger:hilt-android:2.39.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.21'
+    kapt "com.google.dagger:hilt-android-compiler:2.38"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+
+    // Navigation Component: A library used for navigating between screens in an Android app.
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation("androidx.fragment:fragment-ktx:1.5.7")
+
+
+    //Room
+    def room_version = "2.3.0" // check latest version from docs
+
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    //Paging
+    implementation "androidx.paging:paging-runtime:3.1.1"
+
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+
+    //testing
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    androidTestImplementation 'org.mockito:mockito-android:3.12.4'
+    androidTestImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
+    androidTestImplementation 'androidx.arch.core:core-testing:2.2.0'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
+    //  androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    testImplementation 'org.mockito:mockito-inline:3.12.4'
+    androidTestImplementation 'org.mockito:mockito-inline:3.12.4'
+
+
+
+    androidTestImplementation 'androidx.fragment:fragment-testing:1.4.1'
+
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.38.1'
+}
