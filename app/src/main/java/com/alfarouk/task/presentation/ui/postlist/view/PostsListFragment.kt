@@ -65,7 +65,7 @@ class PostsListFragment : Fragment() {
     }
 
     fun restoreRecyclerViewState(savedInstanceState: Bundle?) {
-        savedInstanceState?.getParcelable<Parcelable>("recycler_view_state")?.let { state ->
+        savedInstanceState?.getParcelable<Parcelable>("recycler_view_state3")?.let { state ->
             binding.postsList.layoutManager?.onRestoreInstanceState(state)
         }
     }
@@ -73,7 +73,7 @@ class PostsListFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(
-            "recycler_view_state",
+            "recycler_view_state3",
             binding.postsList.layoutManager?.onSaveInstanceState()
         )
     }
