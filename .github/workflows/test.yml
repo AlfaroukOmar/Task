@@ -23,19 +23,25 @@ jobs:
         run: |
           ./gradlew assembleDebug
 
-      - name: Get the latest commit message
-        id: commit-message
+      - name: Extract the full commit message
         run: |
-          # Extract the full commit message
           FULL_COMMIT_MESSAGE=$(git log -1 --pretty=format:%s)
           echo "FULL_COMMIT_MESSAGE=${FULL_COMMIT_MESSAGE}" >> $GITHUB_ENV
-          # Use awk to split the commit message into NAME and MSG parts
-          echo $FULL_COMMIT_MESSAGE | awk -F', Message: ' '{print COMMIT_NAME=$1}' | awk -F': ' '{print COMMIT_MSG=$2}' >> $GITHUB_ENV
+          # Extract name
+          COMMIT_NAME=$(echo "$FULL_COMMIT_MESSAGE" | awk -F', Message: ' '{print $1}' | awk -F': ' '{print $2}')
+          echo "COMMIT_NAME=${COMMIT_NAME}" >> $GITHUB_ENV
+          # Extract message
+          COMMIT_MSG=$(echo "$FULL_COMMIT_MESSAGE" | awk -F', Message: ' '{print $2}')
+          echo "COMMIT_MSG=${COMMIT_MSG}" >> $GITHUB_ENV
+        shell: /usr/bin/bash -e {0}
+        env:
+          JAVA_HOME: /opt/hostedtoolcache/Java_Adopt_jdk/11.0.22-7/x64
+          JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Adopt_jdk/11.0.22-7/x64
 
       - name: Rename APK with commit message
         run: |
           APK_PATH=./app/build/outputs/apk/debug/app-debug.apk
-          COMMIT_MSG=${{ env.COMMIT_NAME }}
+          COMMIT_MSG=${{ env.COMMIT_MSG }}
           NEW_APK_NAME=app-debug-${COMMIT_NAME}.apk
           NEW_APK_PATH=./app/build/outputs/apk/debug/${NEW_APK_NAME}
           mv $APK_PATH $NEW_APK_PATH
