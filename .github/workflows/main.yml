@@ -29,4 +29,4 @@ jobs:
       run: |
         APK_PATH=./app/build/outputs/apk/release/app-release.apk
         SLACK_CHANNEL=your-slack-channel-id
-        curl -F file=@$APK_PATH -F "initial_comment=Here is the latest APK :tada:" -F channels=$SLACK_CHANNEL -H "Authorization: Bearer $SLACK_BOT_TOKEN" https://slack.com/api/files.upload
+        curl -F file=@$APK_PATH -F "initial_comment=Here is the latest APK :tada:" -F channels=$g -H "Authorization: Bearer $SLACK_BOT_TOKEN" https://slack.com/api/files.upload
