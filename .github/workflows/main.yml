@@ -21,7 +21,7 @@ jobs:
 
     - name: Build Release APK
       run: |
-        ./gradlew assembleRelease
+        ./gradlew assembleDebug
 
     - name: Upload APK to Slack
       env:
