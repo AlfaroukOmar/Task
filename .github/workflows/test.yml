@@ -30,7 +30,7 @@ jobs:
           FULL_COMMIT_MESSAGE=$(git log -1 --pretty=format:%s)
           echo "FULL_COMMIT_MESSAGE=${FULL_COMMIT_MESSAGE}" >> $GITHUB_ENV
           # Use awk to split the commit message into NAME and MSG parts
-          echo $FULL_COMMIT_MESSAGE | awk -F': ' '{print "COMMIT_NAME="$1"\nCOMMIT_MSG="$2}' >> $GITHUB_ENV
+          echo $FULL_COMMIT_MESSAGE | awk -F', Message: ' '{print COMMIT_NAME=$1}' | awk -F': ' '{print COMMIT_MSG=$2}' >> $GITHUB_ENV
 
       - name: Rename APK with commit message
         run: |
