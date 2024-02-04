@@ -26,14 +26,17 @@ jobs:
       - name: Get the latest commit message
         id: commit-message
         run: |
-          COMMIT_MESSAGE=$(git log -1 --pretty=format:%s | sed -e 's/[^[:alnum:][:space:]]/_/g' -e 's/ /-/g')
-          echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
+          # Extract the full commit message
+          FULL_COMMIT_MESSAGE=$(git log -1 --pretty=format:%s)
+          echo "FULL_COMMIT_MESSAGE=${FULL_COMMIT_MESSAGE}" >> $GITHUB_ENV
+          # Use awk to split the commit message into NAME and MSG parts
+          echo $FULL_COMMIT_MESSAGE | awk -F': ' '{print "COMMIT_NAME="$1"\nCOMMIT_MSG="$2}' >> $GITHUB_ENV
 
       - name: Rename APK with commit message
         run: |
           APK_PATH=./app/build/outputs/apk/debug/app-debug.apk
-          COMMIT_MSG=${{ env.COMMIT_MESSAGE }}
-          NEW_APK_NAME=app-debug-${COMMIT_MSG}.apk
+          COMMIT_MSG=${{ env.COMMIT_NAME }}
+          NEW_APK_NAME=app-debug-${COMMIT_NAME}.apk
           NEW_APK_PATH=./app/build/outputs/apk/debug/${NEW_APK_NAME}
           mv $APK_PATH $NEW_APK_PATH
           echo "NEW_APK_PATH=$NEW_APK_PATH" >> $GITHUB_ENV
@@ -44,4 +47,4 @@ jobs:
           SLACK_CHANNEL: 'C06H3NP3AD8'
           NEW_APK_PATH: ${{ env.NEW_APK_PATH }}
         run: |
-          curl -F file=@${NEW_APK_PATH} -F "initial_comment=Here is the latest Debug APK with commit: ${{ env.COMMIT_MESSAGE }}" -F channels=${SLACK_CHANNEL} -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" https://slack.com/api/files.upload
+          curl -F file=@${NEW_APK_PATH} -F "initial_comment=Here is the latest Debug APK with commit: ${{ env.COMMIT_MSG }}" -F channels=${SLACK_CHANNEL} -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" https://slack.com/api/files.upload
