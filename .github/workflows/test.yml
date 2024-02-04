@@ -23,10 +23,25 @@ jobs:
         run: |
           ./gradlew assembleDebug
 
+      - name: Get the latest commit message
+        id: commit-message
+        run: |
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          git log -1 --pretty=%B >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Rename APK with commit message
+        run: |
+          APK_PATH=./app/build/outputs/apk/debug/app-debug.apk
+          COMMIT_MSG=$(echo ${{ env.COMMIT_MESSAGE }} | sed -e 's/[^A-Za-z0-9._-]/_/g')
+          NEW_APK_PATH=./app/build/outputs/apk/debug/${COMMIT_MSG}.apk
+          mv $APK_PATH $NEW_APK_PATH
+          echo "NEW_APK_PATH=$NEW_APK_PATH" >> $GITHUB_ENV
+
       - name: Upload APK to Slack
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL: C06H3NP3AD8
+          NEW_APK_PATH: ${{ env.NEW_APK_PATH }}
         run: |
-          APK_PATH=./app/build/outputs/apk/debug/app-debug.apk
-          SLACK_CHANNEL=C06H3NP3AD8
-          curl -F file=@$APK_PATH -F "initial_comment=Here is the latest Debug APK :tada:" -F channels=$SLACK_CHANNEL -H "Authorization: Bearer $SLACK_BOT_TOKEN" https://slack.com/api/files.upload
+          curl -F file=@$NEW_APK_PATH -F "initial_comment=Here is the latest Debug APK with commit: ${{ env.COMMIT_MESSAGE }}" -F channels=$SLACK_CHANNEL -H "Authorization: Bearer $SLACK_BOT_TOKEN" https://slack.com/api/files.upload
