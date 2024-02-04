@@ -26,15 +26,15 @@ jobs:
       - name: Get the latest commit message
         id: commit-message
         run: |
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B | tr -cd '[:alnum:]._-')
-          echo "COMMIT_MESSAGE=$(echo $COMMIT_MESSAGE)" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+          COMMIT_MESSAGE=$(git log -1 --pretty=format:%s | sed -e 's/[^[:alnum:][:space:]]/_/g' -e 's/ /-/g')
+          echo "COMMIT_MESSAGE=${COMMIT_MESSAGE}" >> $GITHUB_ENV
 
       - name: Rename APK with commit message
         run: |
           APK_PATH=./app/build/outputs/apk/debug/app-debug.apk
           COMMIT_MSG=${{ env.COMMIT_MESSAGE }}
-          NEW_APK_PATH=./app/build/outputs/apk/debug/${COMMIT_MSG}.apk
+          NEW_APK_NAME=app-debug-${COMMIT_MSG}.apk
+          NEW_APK_PATH=./app/build/outputs/apk/debug/${NEW_APK_NAME}
           mv $APK_PATH $NEW_APK_PATH
           echo "NEW_APK_PATH=$NEW_APK_PATH" >> $GITHUB_ENV
 
