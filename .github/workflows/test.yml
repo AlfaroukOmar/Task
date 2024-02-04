@@ -1,0 +1,32 @@
+name: Android Build and Notify
+
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Build Release APK
+      run: |
+         ./gradlew assembleDebug
+
+    - name: Upload APK to Slack
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      run: |
+        APK_PATH=./app/build/outputs/apk/release/app-release.apk
+        SLACK_CHANNEL=C06H3NP3AD8
+        curl -F file=@$APK_PATH -F "initial_comment=Here is the latest APK :tada:" -F channels=$g -H "Authorization: Bearer $SLACK_BOT_TOKEN" https://slack.com/api/files.upload
