@@ -7,26 +7,26 @@ on:
 
 jobs:
   build:
-    name: Build APK
+    name: Build Debug APK
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'adopt'
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
 
-    - name: Build Release APK
-      run: |
-         ./gradlew assembleDebug
+      - name: Build Debug APK
+        run: |
+          ./gradlew assembleDebug
 
-    - name: Upload APK to Slack
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      run: |
-        APK_PATH=./app/build/outputs/apk/release/app-release.apk
-        SLACK_CHANNEL=C06H3NP3AD8
-        curl -F file=@$APK_PATH -F "initial_comment=Here is the latest APK :tada:" -F channels=$g -H "Authorization: Bearer $SLACK_BOT_TOKEN" https://slack.com/api/files.upload
+      - name: Upload APK to Slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: |
+          APK_PATH=./app/build/outputs/apk/debug/app-debug.apk
+          SLACK_CHANNEL=C06H3NP3AD8
+          curl -F file=@$APK_PATH -F "initial_comment=Here is the latest Debug APK :tada:" -F channels=$SLACK_CHANNEL -H "Authorization: Bearer $SLACK_BOT_TOKEN" https://slack.com/api/files.upload
