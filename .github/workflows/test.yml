@@ -30,14 +30,10 @@ jobs:
           echo "COMMIT_MESSAGE=$(echo $COMMIT_MESSAGE)" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
 
-      - name: Rename APK with commit message
-        run: |
-          APK_PATH=./app/build/outputs/apk/debug/app-debug.apk
-
       - name: Upload APK to Slack
         env:
+          APK_PATH: ./app/build/outputs/apk/debug/app-debug.apk
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL: 'C06H3NP3AD8'
-          NEW_APK_PATH: ${{ env.NEW_APK_PATH }}
         run: |
-          curl -F file=@${NEW_APK_PATH} -F "initial_comment=Here is the latest Debug APK with commit: ${{ env.COMMIT_MESSAGE }}" -F channels=${SLACK_CHANNEL} -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" https://slack.com/api/files.upload
+          curl -F file=@${APK_PATH} -F "initial_comment=Here is the latest Debug APK with commit: ${{ env.COMMIT_MESSAGE }}" -F channels=${SLACK_CHANNEL} -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" https://slack.com/api/files.upload
